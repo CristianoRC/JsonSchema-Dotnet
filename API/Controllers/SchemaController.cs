@@ -1,6 +1,4 @@
-﻿using API.Models;
-using Microsoft.AspNetCore.Mvc;
-using NJsonSchema;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
@@ -9,10 +7,11 @@ namespace API.Controllers;
 public class SchemaController : Controller
 {
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult Index([FromQuery] string schemaName)
     {
-        var schema = JsonSchema.FromType<Person>();
-        var schemaData = schema.ToJson();
-        return Ok(schemaData);
+        var jsonSchema = JsonSchemaService.GetJsonSchema(schemaName);
+        if (string.IsNullOrEmpty(jsonSchema))
+            return NotFound($"Schema '{schemaName}' não encontrado");
+        return Ok(jsonSchema);
     }
 }

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Models;
 
+[Schema(nameof(Person))]
 public class Person
 {
     [Required]
