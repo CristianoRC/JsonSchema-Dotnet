@@ -20,8 +20,7 @@ public static class JsonSchemaService
         {
             SchemaType = SchemaType.JsonSchema,
             IgnoreObsoleteProperties = true,
-            GenerateExamples = true,
-            AllowReferencesWithProperties = true//TODO: Revisa o que nele fez passar a feature
+            GenerateExamples = true
         };
         var schema = JsonSchema.FromType(schemaType, schemaSettings);   
         return schema.ToJson();
