@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     const carregarSchema = async () => {
-      const jsonSchema = await getJsonSchema('car')
+      const jsonSchema = await getJsonSchema('person')
       setSchema(jsonSchema)
     }
     carregarSchema()
