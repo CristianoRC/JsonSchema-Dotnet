@@ -1,3 +1,5 @@
+using API.Schemas;
+
 namespace API;
 
 public class Program

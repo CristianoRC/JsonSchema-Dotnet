@@ -1,4 +1,4 @@
-﻿namespace API;
+﻿namespace API.Schemas;
 
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class SchemaAttribute(string name) : Attribute

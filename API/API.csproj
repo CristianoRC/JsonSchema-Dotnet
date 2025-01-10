@@ -9,6 +9,8 @@
 
     <ItemGroup>
         <PackageReference Include="NJsonSchema" Version="11.1.0" />
+        <PackageReference Include="NJsonSchema.CodeGeneration" Version="11.1.0" />
+        <PackageReference Include="NJsonSchema.CodeGeneration.CSharp" Version="11.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
     </ItemGroup>
 

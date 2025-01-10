@@ -2,7 +2,7 @@
 using NJsonSchema;
 using NJsonSchema.Generation;
 
-namespace API;
+namespace API.Schemas;
 
 public static class JsonSchemaService
 {
