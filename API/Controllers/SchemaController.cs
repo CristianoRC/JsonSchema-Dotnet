@@ -1,7 +1,6 @@
 ﻿using API.Models;
 using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using NJsonSchema;
 using NJsonSchema.CodeGeneration.CSharp;
 
@@ -22,12 +21,14 @@ public class SchemaController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateClassByJsonSchema([FromBody] object jsonSchema)
+    public async Task<IActionResult> CreateClassByJsonSchema([FromBody] JsonSchemaToCsharp jsonSchemaRequest)
     {
-        var schema = await JsonSchema.FromUrlAsync("http://localhost:5000/Schema?schemaName=person");
+        //var schema = await JsonSchema.FromUrlAsync("http://localhost:5000/Schema?schemaName=person");
+        var schema = await JsonSchema.FromJsonAsync(jsonSchemaRequest.JsonSchema);
         var settings = new CSharpGeneratorSettings()
         {
-            //Namespace = 
+            Namespace = jsonSchemaRequest.Namespace,
+            ClassStyle = CSharpClassStyle.Poco
         };
         var generator = new CSharpGenerator(schema, settings);
         var code = generator.GenerateFile();
