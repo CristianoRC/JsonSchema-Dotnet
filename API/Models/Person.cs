@@ -9,6 +9,7 @@ public class Person
     [Required]
     public string FirstName { get; set; }
 
+    [Display(Name = "Olá Mundo - Display name" )]
     public string MiddleName { get; set; }
 
     [Required]
