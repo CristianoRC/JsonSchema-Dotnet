@@ -2,6 +2,7 @@
 
 namespace API.Controllers;
 
+//TODO: Adicionar cache nessa request!
 [ApiController]
 [Route("[controller]")]
 public class SchemaController : Controller

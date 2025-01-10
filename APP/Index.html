@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Veículo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: none;
+            border-radius: 12px;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .card-header {
+            background: var(--primary-color);
+            border-radius: 12px 12px 0 0 !important;
+            padding: 1.5rem;
+        }
+        
+        .card-header h3 {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-control, .input-group-text {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .input-group-text {
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            color: #374151;
+        }
+        
+        .loading {
+            display: none;
+            margin-left: 8px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0 text-white">
+                            <i class="fas fa-car"></i>
+                            Cadastro de Veículo
+                        </h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="carForm">
+                            <div class="row g-4" id="formFields">
+                                <!-- Os campos serão gerados dinamicamente aqui -->
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary w-100" id="submitBtn">
+                                    <i class="fas fa-save me-2"></i>
+                                    Cadastrar Veículo
+                                    <span class="loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
+    <script>
+        let formSchema = null;
+
+        async function loadSchema() {
+            try {
+                const response = await axios.get('http://localhost:5000/Schema', {
+                    params: {
+                        schemaName: 'car'
+                    }
+                });
+                formSchema = response.data;
+                generateFormFields(formSchema);
+            } catch (error) {
+                Toastify({
+                    text: "❌ Erro ao carregar o schema: " + error.message,
+                    duration: 4000,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                        borderRadius: "8px",
+                        padding: "1rem"
+                    }
+                }).showToast();
+            }
+        }
+
+        // Carrega o schema assim que a página for carregada
+        document.addEventListener('DOMContentLoaded', loadSchema);
+
+        const generateFormFields = (schema) => {
+            const formFields = document.getElementById('formFields');
+            
+            Object.entries(schema.properties).forEach(([fieldName, fieldSchema]) => {
+                const col = document.createElement('div');
+                col.className = fieldSchema.multiline ? 'col-12' : 'col-md-4';
+                
+                const label = document.createElement('label');
+                label.className = 'form-label';
+                label.htmlFor = fieldName;
+                label.innerHTML = `<i class="fas fa-${fieldSchema.icon} me-2"></i>${fieldSchema.title}`;
+                
+                let input;
+                if (fieldSchema.multiline) {
+                    input = document.createElement('textarea');
+                    input.rows = 3;
+                } else {
+                    input = document.createElement('input');
+                    input.type = fieldSchema.type === 'integer' || fieldSchema.type === 'number' ? 'number' : 'text';
+                    
+                    if (fieldSchema.minimum !== undefined) input.min = fieldSchema.minimum;
+                    if (fieldSchema.maximum !== undefined) input.max = fieldSchema.maximum;
+                    if (fieldSchema.type === 'number') input.step = '0.01';
+                }
+                
+                input.className = 'form-control';
+                input.id = fieldName;
+                input.placeholder = fieldSchema.placeholder;
+                input.required = fieldSchema.required;
+                
+                if (fieldSchema.currency) {
+                    const inputGroup = document.createElement('div');
+                    inputGroup.className = 'input-group';
+                    
+                    const currencySpan = document.createElement('span');
+                    currencySpan.className = 'input-group-text';
+                    currencySpan.textContent = 'R$';
+                    
+                    inputGroup.appendChild(currencySpan);
+                    inputGroup.appendChild(input);
+                    col.appendChild(label);
+                    col.appendChild(inputGroup);
+                } else {
+                    col.appendChild(label);
+                    col.appendChild(input);
+                }
+                
+                formFields.appendChild(col);
+            });
+        }
+
+        document.getElementById('carForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingSpinner = submitBtn.querySelector('.loading');
+            
+            submitBtn.disabled = true;
+            loadingSpinner.style.display = 'inline-block';
+            
+            const formData = {};
+            Object.keys(formSchema.properties).forEach(fieldName => {
+                const input = document.getElementById(fieldName);
+                const fieldSchema = formSchema.properties[fieldName];
+                
+                let value = input.value;
+                if (fieldSchema.type === 'integer') {
+                    value = parseInt(value);
+                } else if (fieldSchema.type === 'number') {
+                    value = parseFloat(value);
+                }
+                
+                formData[fieldName] = value;
+            });
+
+            try {
+                const response = await axios.post('http://localhost:5000/api/car', formData);
+                
+                Toastify({
+                    text: "✅ Veículo cadastrado com sucesso!",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        borderRadius: "8px",
+                        padding: "1rem"
+                    }
+                }).showToast();
+
+                document.getElementById('carForm').reset();
+                
+            } catch (error) {
+                Toastify({
+                    text: "❌ Erro ao cadastrar o veículo: " + error.message,
+                    duration: 4000,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                        borderRadius: "8px",
+                        padding: "1rem"
+                    }
+                }).showToast();
+            } finally {
+                submitBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
