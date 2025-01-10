@@ -4,42 +4,9 @@ import { RJSFSchema } from '@rjsf/utils'
 import validator from '@rjsf/validator-ajv8'
 import { CssBaseline, Container, Typography, Paper, createTheme, ThemeProvider, Box } from '@mui/material'
 import axios from 'axios'
+import { theme } from './theme'
 
 function App() {
-  const theme = createTheme({
-    palette: {
-      mode: 'dark',
-      primary: {
-        main: '#90caf9',
-      },
-      background: {
-        default: '#121212',
-        paper: '#1e1e1e',
-      },
-      text: {
-        primary: '#ffffff',
-        secondary: 'rgba(255, 255, 255, 0.7)',
-      },
-    },
-    components: {
-      MuiPaper: {
-        styleOverrides: {
-          root: {
-            boxShadow: '0 3px 10px rgb(0 0 0 / 0.2)',
-            borderRadius: 8,
-          },
-        },
-      },
-      MuiContainer: {
-        styleOverrides: {
-          root: {
-            maxWidth: '800px !important',
-          },
-        },
-      },
-    },
-  })
-
   const [formData, setFormData] = useState(null)
   const [schema, setSchema] = useState<RJSFSchema | null>(null)
 
