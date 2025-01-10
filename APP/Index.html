@@ -1,128 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="sl-theme-dark">
-
-<head>
+<html lang="">
+  <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Veículo</title>
-    <script type="importmap">
-        {
-            "imports": {
-                "lit": "https://ga.jspm.io/npm:lit@2.8.0/index.js",
-                "lit/": "https://ga.jspm.io/npm:lit@2.8.0/",
-                "lit-html": "https://ga.jspm.io/npm:lit-html@2.8.0/lit-html.js",
-                "lit-html/": "https://ga.jspm.io/npm:lit-html@2.8.0/",
-                "lit-element/": "https://ga.jspm.io/npm:lit-element@3.3.3/",
-                "@lit/reactive-element": "https://ga.jspm.io/npm:@lit/reactive-element@1.6.3/reactive-element.js",
-                "@lit/reactive-element/": "https://ga.jspm.io/npm:@lit/reactive-element@1.6.1/",
-                "@shoelace-style/shoelace/": "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/",
-                "lodash-es/set": "https://unpkg.com/lodash-es@4.17.21/set.js",
-                "@jsfe/core": "https://unpkg.com/@jsfe/core@0.0.5/dist/esm-min"
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.9.0/cdn/themes/dark.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #1a1c1e 0%, #2d3748 100%);
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            color: #e2e8f0;
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-
-        .container {
-            width: calc(50rem + 5vw);
-            padding: 2rem;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .header h1 {
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            font-size: 2rem;
-        }
-
-        json-schema-form {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>
-                <i class="fas fa-car"></i>
-                Cadastro de Veículo
-            </h1>
-        </div>
-
-        <json-schema-form id="carForm"></json-schema-form>
-    </div>
-
-    <script type="module">
-        import '@jsfe/core';
-
-        const carForm = document.getElementById('carForm');
-
-        const loadSchema = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/Schema?schemaName=car');
-                const schema = await response.json();
-
-                carForm.schema = schema;
-                carForm.data = {};
-            } catch (error) {
-                console.error('Erro ao carregar o schema:', error);
-            }
-        }
-
-        carForm.dataChangeCallback = (newData) => {
-            console.info('Dados alterados:', newData);
-        };
-
-        carForm.onFormSubmit = async (newData, valid) => {
-            if (!valid) {
-                console.error('Formulário inválido');
-                return;
-            }
-
-            try {
-                const response = await fetch('http://localhost:5000/api/car', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(newData)
-                });
-
-                if (response.ok) {
-                    console.info('Veículo cadastrado com sucesso!');
-                    carForm.data = {};
-                } else {
-                    console.error('Erro ao cadastrar veículo');
-                }
-            } catch (error) {
-                console.error('Erro ao enviar dados:', error);
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', loadSchema);
-    </script>
-</body>
-
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
