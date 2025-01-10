@@ -6,6 +6,7 @@ import { CssBaseline, Container, Typography, Paper, ThemeProvider, Box } from '@
 import { theme } from './theme'
 import { LoadingScreen } from './components/LoadingScreen'
 import { getJsonSchema } from './services/schemaService'
+import { SubmittedData } from './components/SubmittedData'
 
 function App() {
   const [formData, setFormData] = useState(null)
@@ -99,37 +100,8 @@ function App() {
               }}
             />
           </Paper>
-          {formData && (
-            <Paper
-              sx={{
-                bgcolor: 'background.paper',
-                width: '100%',
-                mt: 2,
-                p: 2,
-              }}
-            >
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  mb: 1,
-                  fontWeight: 500,
-                  color: 'primary.main'
-                }}
-              >
-                Dados Submetidos:
-              </Typography>
-              <Paper
-                sx={{
-                  bgcolor: '#2d2d2d',
-                }}
-                elevation={0}
-              >
-                <pre style={{ margin: 0, color: '#fff' }}>
-                  {JSON.stringify(formData, null, 2)}
-                </pre>
-              </Paper>
-            </Paper>
-          )}
+          
+          <SubmittedData formData={formData} />
         </Container>
       </Box>
     </ThemeProvider>
