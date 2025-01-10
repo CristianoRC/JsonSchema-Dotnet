@@ -7,10 +7,8 @@
 
 body {
   margin: 0;
-  padding: 0;
   width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
 #root {
@@ -19,64 +17,31 @@ body {
 }
 
 .custom-form {
-  width: 100%;
-  
   .MuiButton-contained {
     text-transform: none;
     font-weight: 500;
-    padding: 8px 24px;
-    border-radius: 6px;
-    margin-top: 24px;
+    padding: 0px 0px;
+    border-radius: 4px;
+    margin-top: 0px;
   }
-  
+
+  .MuiFormControl-root {
+    margin-bottom: 16px;
+  }
+
   .MuiInputBase-root {
-    border-radius: 6px;
-    width: 100%;
-    max-width: 100%;
+    border-radius: 4px;
   }
 
   .MuiOutlinedInput-notchedOutline {
     border-color: rgba(255, 255, 255, 0.23);
   }
 
-  .MuiFormControl-root {
-    width: 100%;
-    margin-bottom: 16px;
+  .MuiTypography-root {
+    color: #90caf9;
   }
+}
 
-  /* Ajuste do layout do form */
-  > div {
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
-  }
-
-  /* Ajuste dos fieldsets */
-  fieldset {
-    padding: 16px;
-    border-radius: 8px;
-    border-color: rgba(255, 255, 255, 0.23);
-    margin-bottom: 16px;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  /* Ajuste das labels */
-  .MuiFormLabel-root {
-    font-size: 0.9rem;
-    margin-bottom: 4px;
-    word-break: break-word;
-  }
-
-  /* Ajuste para inputs longos */
-  input, textarea {
-    max-width: 100%;
-    word-break: break-all;
-  }
-
-  /* Previne overflow em textos longos */
-  pre {
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
+.field-spacing {
+  margin-bottom: 8px !important;
 }

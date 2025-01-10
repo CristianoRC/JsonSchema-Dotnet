@@ -93,9 +93,8 @@ function App() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          py: 4,
+          py: 2,
           px: 2,
-          boxSizing: 'border-box',
         }}
       >
         <Container 
@@ -103,29 +102,27 @@ function App() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            maxWidth: '600px !important',
+            maxWidth: '500px !important',
           }}
         >
           <Typography 
-            variant="h4" 
+            variant="h5"
             component="h1" 
-            gutterBottom
             sx={{
               fontWeight: 600,
               textAlign: 'center',
-              mb: 3,
+              mb: 2,
               color: 'primary.main',
-              wordBreak: 'break-word',
             }}
           >
             JSON Schema Form Demo
           </Typography>
           <Paper 
             sx={{ 
-              p: 3,
+              px: 2,
+              py: 2,
               bgcolor: 'background.paper',
               width: '100%',
-              boxSizing: 'border-box',
             }}
           >
             <Form
@@ -136,10 +133,24 @@ function App() {
               uiSchema={{
                 "ui:submitButtonOptions": {
                   "props": {
-                    "size": "large",
+                    "size": "medium",
                     "variant": "contained",
-                    "fullWidth": true
+                    "fullWidth": true,
+                    "sx": {
+                      textTransform: 'none',
+                      fontWeight: 500,
+                      py: 1.5,
+                      mt: 1,
+                      borderRadius: 1,
+                      backgroundColor: 'primary.main',
+                      '&:hover': {
+                        backgroundColor: 'primary.dark',
+                      }
+                    }
                   }
+                },
+                "*": {
+                  "ui:classNames": "field-spacing",
                 }
               }}
             />
@@ -147,16 +158,16 @@ function App() {
           {formData && (
             <Paper 
               sx={{ 
-                mt: 3, 
-                p: 3,
                 bgcolor: 'background.paper',
-                width: '100%'
+                width: '100%',
+                mt: 2,
+                p: 2,
               }}
             >
               <Typography 
-                variant="h6" 
+                variant="subtitle1"
                 sx={{ 
-                  mb: 2,
+                  mb: 1,
                   fontWeight: 500,
                   color: 'primary.main'
                 }}
@@ -165,9 +176,7 @@ function App() {
               </Typography>
               <Paper 
                 sx={{ 
-                  p: 2, 
                   bgcolor: '#2d2d2d',
-                  fontFamily: 'monospace'
                 }}
                 elevation={0}
               >
