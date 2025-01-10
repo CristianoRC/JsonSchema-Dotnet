@@ -2,10 +2,10 @@
 
 namespace API.Models;
 
+[Schema(nameof(Car))]
 public class Car
 {
-    [Required]
-    public string Name { get; set; }
+    [Required] public string Name { get; set; }
 
     [RegularExpression("[A-Z]{3}[0-9][0-9A-Z][0-9]{2}")]
     public string Plate { get; set; }
