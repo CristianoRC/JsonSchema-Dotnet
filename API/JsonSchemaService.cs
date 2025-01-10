@@ -1,37 +1,34 @@
 ﻿using System.Reflection;
 using NJsonSchema;
-using NJsonSchema.CodeGeneration.CSharp;
 
 namespace API;
 
 public static class JsonSchemaService
 {
-    private static readonly Dictionary<string, string> _schemas = new(StringComparer.OrdinalIgnoreCase);
-
-    public static void RegisterSchema(string name, string jsonSchema)
-    {
-        _schemas[name] = jsonSchema;
-    }
-
     public static string? GetJsonSchema(string schemaName)
     {
-        return _schemas.TryGetValue(schemaName, out var schema) ? schema : null;
-    }
+        var assembly = Assembly.GetExecutingAssembly();
+        var schemaType = assembly.GetTypes()
+            .FirstOrDefault(t => t.GetCustomAttributes<SchemaAttribute>()
+                .Any(a => string.Equals(a.Name, schemaName, StringComparison.OrdinalIgnoreCase)));
 
-    public static string GenerateCSharpCode(string schemaName)
-    {
-        if (!_schemas.TryGetValue(schemaName, out var jsonSchema))
-            throw new KeyNotFoundException($"Schema '{schemaName}' não encontrado.");
+        if (schemaType is null)
+            return null;
 
-        var schema = JsonSchema.FromJsonAsync(jsonSchema).Result;
-        var generator = new CSharpGenerator(schema);
-        return generator.GenerateFile();
+        var schema = JsonSchema.FromType(schemaType);
+        return schema.ToJson();
     }
 
     public static void ValidateDuplicatedSchemaNames()
     {
-        var duplicates = _schemas
-            .GroupBy(x => x.Key, StringComparer.OrdinalIgnoreCase)
+        //TODO: Validar se vale a pena já deixar em memoria desde a criação para não buscar toda vez
+        var assembly = Assembly.GetExecutingAssembly();
+        var typesWithSchemas = assembly.GetTypes()
+            .SelectMany(t => t.GetCustomAttributes<SchemaAttribute>()
+                .Select(a => new { Type = t, SchemaName = a.Name }))
+            .GroupBy(x => x.SchemaName, StringComparer.OrdinalIgnoreCase);
+
+        var duplicates = typesWithSchemas
             .Where(g => g.Count() > 1)
             .ToList();
 
@@ -39,7 +36,7 @@ public static class JsonSchemaService
             return;
         
         var duplicateMessages = duplicates.Select(g =>
-            $"Schema '{g.Key}' está sendo usado múltiplas vezes");
+            $"Schema '{g.Key}' está sendo usado por múltiplos tipos: {string.Join(", ", g.Select(x => x.Type.Name))}");
         var exceptionMessage = $"Foram encontrados schemas com nomes duplicados:\n{string.Join("\n", duplicateMessages)}";
         throw new DuplicateSchemaException(exceptionMessage);
     }
