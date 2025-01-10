@@ -1,43 +1,42 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Form from '@rjsf/mui'
 import { RJSFSchema } from '@rjsf/utils'
 import validator from '@rjsf/validator-ajv8'
 import { CssBaseline, Container, Typography, Paper } from '@mui/material'
-
-const schema: RJSFSchema = {
-  title: "Formulário de Exemplo",
-  type: "object",
-  required: ["nome", "email"],
-  properties: {
-    nome: {
-      type: "string",
-      title: "Nome",
-      minLength: 3
-    },
-    email: {
-      type: "string",
-      title: "E-mail",
-      format: "email"
-    },
-    idade: {
-      type: "integer",
-      title: "Idade",
-      minimum: 0
-    },
-    observacoes: {
-      type: "string",
-      title: "Observações",
-      maxLength: 500
-    }
-  }
-}
+import axios from 'axios'
 
 function App() {
   const [formData, setFormData] = useState(null)
+  const [schema, setSchema] = useState<RJSFSchema | null>(null)
+
+  useEffect(() => {
+    const fetchSchema = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/Schema', {
+          params: {
+            schemaName: 'car'
+          }
+        })
+        setSchema(response.data)
+      } catch (error) {
+        console.error('Erro ao buscar o schema:', error)
+      }
+    }
+
+    fetchSchema()
+  }, [])
 
   const handleSubmit = ({ formData }: any) => {
-    console.log("Form submitted:", formData)
+    console.log("Form submetido:", formData)
     setFormData(formData)
+  }
+
+  if (!schema) {
+    return (
+      <Container maxWidth="md" sx={{ mt: 4 }}>
+        <Typography>Carregando schema...</Typography>
+      </Container>
+    )
   }
 
   return (
