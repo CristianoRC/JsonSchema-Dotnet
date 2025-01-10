@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using NJsonSchema;
+using NJsonSchema.Generation;
 
 namespace API;
 
@@ -15,7 +16,14 @@ public static class JsonSchemaService
         if (schemaType is null)
             return null;
 
-        var schema = JsonSchema.FromType(schemaType);
+        var schemaSettings = new SystemTextJsonSchemaGeneratorSettings()
+        {
+            SchemaType = SchemaType.JsonSchema,
+            IgnoreObsoleteProperties = true,
+            GenerateExamples = true,
+            AllowReferencesWithProperties = true//TODO: Revisa o que nele fez passar a feature
+        };
+        var schema = JsonSchema.FromType(schemaType, schemaSettings);   
         return schema.ToJson();
     }
 
@@ -34,10 +42,11 @@ public static class JsonSchemaService
 
         if (duplicates.Count == 0)
             return;
-        
+
         var duplicateMessages = duplicates.Select(g =>
             $"Schema '{g.Key}' está sendo usado por múltiplos tipos: {string.Join(", ", g.Select(x => x.Type.Name))}");
-        var exceptionMessage = $"Foram encontrados schemas com nomes duplicados:\n{string.Join("\n", duplicateMessages)}";
+        var exceptionMessage =
+            $"Foram encontrados schemas com nomes duplicados:\n{string.Join("\n", duplicateMessages)}";
         throw new DuplicateSchemaException(exceptionMessage);
     }
 }
