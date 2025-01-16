@@ -1,4 +1,4 @@
-# 🧪 POC: Formulários Dinâmicos com JSON Schema (.NET)
+# 🧪 POC: Formulários Dinâmicos com JSON Schema
 
 ## 📝 Descrição
 Prova de conceito (POC) que demonstra a geração automática de JSON Schema a partir de endpoints C#, permitindo a criação dinâmica de formulários na interface do usuário.
@@ -10,12 +10,14 @@ Prova de conceito (POC) que demonstra a geração automática de JSON Schema a p
 - Manter a consistência entre backend e frontend
 
 ## 🚀 Tecnologias Utilizadas
-- .NET Core
+- .NET
 - JSON Schema
 - C#
+- React
 
 ## ✨ Funcionalidades
 - Geração automática de JSON Schema
 - Validação de dados baseada no schema
 - Criação dinâmica de formulários
 - Integração simplificada entre backend e frontend
+
